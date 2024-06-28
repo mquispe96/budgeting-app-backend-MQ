@@ -3,12 +3,13 @@
 #### Back-end feature requirements
 
 1. Server incorporates a single resource with the following fields:
-   - `transaction_id` - A unique number for each item
-   - `transaction_name`- string - the name of the transaction (ie: income, savings, cat food, etc.)
-   - `transaction_amount` -number - the amount of the transaction
-   - `transaction_date`- string - the date should be a simple string.
-   - `transaction_from` - string - who this transaction was with (ie. employer, bank, pet store, grocery store, etc)
-   - `transaction_category` - string - what category does this fall into (income, savings, pets, food, etc)
+   - `id` - A unique number for each item
+   - `name`- string - the name of the transaction (ie: income, savings, cat food, etc.)
+   - `amount` -number - the amount of the transaction
+   - `date`- string - the date should be a simple string.
+   - `from` - string - who this transaction was with (ie. employer, bank, pet store, grocery store, etc)
+   - `category` - string - what category does this fall into (income, savings, pets, food, etc)
+   - `type` - string - what type of transaction is this (ie. deposit, withdrawal, etc)
 2. A route exists to create new resources.
 3. A route exists to read all resources.
 4. A route exists to read a single resource.
