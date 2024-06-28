@@ -1,13 +1,14 @@
 export const hasAllRequiredFields = (req, res, next) => {
-  const {name, amount, from, category, type} = req.body;
-  if (!name || !amount || !from || !category) {
-    return res.status(400).send('Missing required fields');
+  const keyNames = Object.keys(req.body);
+  if (!keyNames.every(key => req.body[key])) {
+    const missingFields = keyNames.filter(key => !req.body[key]);
+    return res.status(400).json(missingFields);
   }
   return next();
 };
 
 export const validateDataTypes = (req, res, next) => {
-  const {name, amount, from, category, type} = req.body;
+  const {name, amount, from, category} = req.body;
   if (
     typeof name !== 'string' ||
     typeof from !== 'string' ||
