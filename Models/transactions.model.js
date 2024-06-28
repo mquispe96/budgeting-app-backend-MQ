@@ -1,58 +1,44 @@
-import { nanoid } from 'nanoid';
+import {nanoid} from 'nanoid';
 
 export default [
   {
     id: nanoid(6),
-    name: "Salary",
+    name: 'Salary',
     amount: 1000,
-    date: "2021-01-01",
-    from: "Employer",
-    category: "Income",
-    type: "Deposit"
+    created: '2021-01-01',
+    updated: '2021-01-01',
+    from: 'Employer',
+    category: 'Income',
+    type: 'Deposit',
   },
   {
     id: nanoid(6),
-    name: "Rent",
+    name: 'Rent',
     amount: 500,
-    date: "2021-01-02",
-    from: "Landlord",
-    category: "Housing",
-    type: "Withdrawal"
+    created: '2021-01-01',
+    updated: '2021-01-01',
+    from: 'Tenant',
+    category: 'Housing',
+    type: 'Withdrawal',
   },
   {
     id: nanoid(6),
-    name: "Groceries",
-    amount: 120,
-    date: "2021-01-03",
-    from: "Grocery Store",
-    category: "Food",
-    type: "Withdrawal"
+    name: 'Groceries',
+    amount: 50,
+    created: '2021-01-01',
+    updated: '2021-01-01',
+    from: 'Self',
+    category: 'Food',
+    type: 'Withdrawal',
   },
   {
     id: nanoid(6),
-    name: "Salary",
-    amount: 1000,
-    date: "2021-02-01",
-    from: "Employer",
-    category: "Income",
-    type: "Deposit"
-  },
-  {
-    id: nanoid(6),
-    name: "Rent",
-    amount: 500,
-    date: "2021-02-02",
-    from: "Landlord",
-    category: "Housing",
-    type: "Withdrawal"
-  },
-  {
-    id: nanoid(6),
-    name: "Groceries",
+    name: 'Electricity',
     amount: 100,
-    date: "2021-02-03",
-    from: "Grocery Store",
-    category: "Food",
-    type: "Withdrawal"
-  }
-]
+    created: '2021-01-01',
+    updated: '2021-01-01',
+    from: 'Utility Company',
+    category: 'Utilities',
+    type: 'Withdrawal',
+  },
+];

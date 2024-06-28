@@ -1,6 +1,8 @@
 import express from 'express';
 import {nanoid} from 'nanoid';
 import transactionsDB from '../Models/transactions.model.js';
+import {dateCreated, formatBody} from '../Formatting/formatting.js';
+import {hasAllRequiredFields, validateDataTypes} from '../Validation/validation.js';
 const transactions = express.Router();
 
 transactions.get('/', (req, res) => res.json(transactionsDB));
@@ -13,19 +15,31 @@ transactions.get('/:id', (req, res) => {
     res.status(404).send('Transaction not found');
   }
 });
-transactions.post('/', (req, res) => {
-  const createdTransaction = {id: nanoid(6), ...req.body};
+transactions.post('/', hasAllRequiredFields, validateDataTypes,(req, res) => {
+  const formattedBody = formatBody(req.body);
+  const createdTransaction = {
+    id: nanoid(6),
+    created: dateCreated(),
+    updated: dateCreated(),
+    ...formattedBody,
+  };
   transactionsDB.push(createdTransaction);
   res.json(transactionsDB[transactionsDB.length - 1].id);
 });
-transactions.put('/:id', (req, res) => {
+transactions.put('/:id', hasAllRequiredFields, validateDataTypes,(req, res) => {
   const {id} = req.params;
   const transactionIndex = transactionsDB.findIndex(
     transaction => transaction.id === id,
   );
   if (transactionIndex > -1) {
-    const 
-    transactionsDB[transactionIndex] = req.body;
+    const formattedBody = formatBody(req.body);
+    const updatedTransaction = {
+      id: transactionsDB[transactionIndex].id,
+      created: transactionsDB[transactionIndex].created,
+      updated: dateCreated(),
+      ...formattedBody,
+    };
+    transactionsDB[transactionIndex] = updatedTransaction;
     res.json(transactionsDB[transactionIndex]);
   } else {
     res.status(404).send('Transaction not found');
