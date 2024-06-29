@@ -1,3 +1,5 @@
+import usernamesDB from '../Models/usernames.model.js';
+
 export const hasAllRequiredFields = (req, res, next) => {
   const keyNames = Object.keys(req.body);
   if (!keyNames.every(key => req.body[key])) {
@@ -15,7 +17,36 @@ export const validateDataTypes = (req, res, next) => {
     typeof category !== 'string' ||
     typeof amount !== 'number'
   ) {
-    return res.status(400).send('Invalid data types');
+    return res.status(400).json({error: 'Invalid data types'});
+  }
+  return next();
+};
+
+export const validateUsername = (req, res, next) => {
+  const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const {username} = req.body;
+  if (!regex.test(username)) {
+    return res.status(400).json({error: 'Invalid username'});
+  }
+  return next();
+};
+
+export const itsNewUsername = (req, res, next) => {
+  const {username} = req.body;
+  const user = usernamesDB.find(user => user.username === username);
+  if (user) {
+    return res.status(400).json({error: 'Username already exists'});
+  }
+  return next();
+};
+
+export const itsNewPassword = (req, res, next) => {
+  const user = usernamesDB.find(user => user.username === req.params.username);
+  if (!user) {
+    return res.status(404).json({error: 'User not found'});
+  }
+  if (user.previousPasswords.includes(req.body.password)) {
+    return res.status(400).json({error: 'Password already used'});
   }
   return next();
 };

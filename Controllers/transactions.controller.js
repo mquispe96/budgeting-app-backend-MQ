@@ -12,7 +12,7 @@ transactions.get('/:id', (req, res) => {
   if (transaction) {
     res.json(transaction);
   } else {
-    res.status(404).send('Transaction not found');
+    res.status(404).json({error: 'Transaction not found'});
   }
 });
 transactions.post('/', hasAllRequiredFields, validateDataTypes,(req, res) => {
@@ -40,9 +40,9 @@ transactions.put('/:id', hasAllRequiredFields, validateDataTypes,(req, res) => {
       ...formattedBody,
     };
     transactionsDB[transactionIndex] = updatedTransaction;
-    res.json(transactionsDB[transactionIndex]);
+    res.json({success: 'Transaction updated'});
   } else {
-    res.status(404).send('Transaction not found');
+    res.status(404).json({error: 'Transaction not found'});
   }
 });
 transactions.delete('/:id', (req, res) => {
@@ -52,9 +52,9 @@ transactions.delete('/:id', (req, res) => {
   );
   if (transactionIndex) {
     transactionsDB.splice(transactionIndex, 1);
-    res.json(transactionsDB);
+    res.json({success: 'Transaction deleted'});
   } else {
-    res.status(404).send('Transaction not found');
+    res.status(404).json({error: 'Transaction not found'});
   }
 });
 
