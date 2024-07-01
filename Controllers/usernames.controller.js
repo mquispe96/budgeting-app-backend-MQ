@@ -25,15 +25,11 @@ usernames.put('/update', usernameExists, itsNewPassword, (req, res) => {
   usernamesDB[userIndex].password = password;
   res.json({success: 'User updated'});
 });
-usernames.delete('/delete', (req, res) => {
+usernames.delete('/delete', usernameExists, checkPassword, (req, res) => {
   const {username} = req.body;
   const userIndex = usernamesDB.findIndex(user => user.username === username);
-  if (userIndex > -1) {
-    usernamesDB.splice(userIndex, 1);
-    res.json({success: 'User deleted'});
-  } else {
-    res.status(404).json({error: 'User not found'});
-  }
+  usernamesDB.splice(userIndex, 1);
+  res.json({success: 'User deleted'});
 });
 
 export default usernames;
