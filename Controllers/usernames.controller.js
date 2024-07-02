@@ -11,13 +11,13 @@ import {
 const usernames = express.Router();
 
 usernames.get('/', (req, res) => res.json({error: 'Access Denied'}));
-usernames.get('/login', usernameExists, checkPassword, (req, res) => {
-  res.json({success: 'Login successful'});
-});
 usernames.post('/', validateUsername, itsNewUsername, (req, res) => {
   const previousPasswords = [req.body.password];
   usernamesDB.push({...req.body, previousPasswords});
   res.json({success: 'User created'});
+});
+usernames.post('/login', usernameExists, checkPassword, (req, res) => {
+  res.json({success: 'Login successful'});
 });
 usernames.put('/update', usernameExists, itsNewPassword, (req, res) => {
   const {username, password} = req.body;
