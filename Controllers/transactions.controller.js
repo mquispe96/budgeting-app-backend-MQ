@@ -50,7 +50,7 @@ transactions.delete('/:id', (req, res) => {
   const transactionIndex = transactionsDB.findIndex(
     transaction => transaction.id === id,
   );
-  if (transactionIndex) {
+  if (transactionIndex > -1) {
     transactionsDB.splice(transactionIndex, 1);
     res.json({success: 'Transaction deleted'});
   } else {
