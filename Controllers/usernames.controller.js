@@ -30,7 +30,7 @@ usernames.put('/:id', (req, res) => {
   }
   const {password} = req.body;
   usernamesDB[userIndex].password = password;
-  res.json({success: 'Password updated'});
+  res.json(usernamesDB[userIndex]);
 });
 usernames.delete('/:id', (req, res) => {
   const {id} = req.params;
