@@ -1,9 +1,14 @@
 import express from 'express';
 import {nanoid} from 'nanoid';
-import transactionsDB from '../Models/transactions.model.js';
+import transactionsArr from '../Models/transactions.model.js';
 import {dateCreated, formatBody} from '../Formatting/formatting.js';
-import {hasAllRequiredFields, validateDataTypes} from '../Validation/validation.js';
+import {
+  hasAllRequiredFields,
+  validateDataTypes,
+} from '../Validation/validation.js';
 const transactions = express.Router();
+
+let transactionsDB = [...transactionsArr];
 
 transactions.get('/', (req, res) => res.json(transactionsDB));
 transactions.get('/:id', (req, res) => {
@@ -15,7 +20,7 @@ transactions.get('/:id', (req, res) => {
     res.status(404).json({error: 'Transaction not found'});
   }
 });
-transactions.post('/', hasAllRequiredFields, validateDataTypes,(req, res) => {
+transactions.post('/', hasAllRequiredFields, validateDataTypes, (req, res) => {
   const formattedBody = formatBody(req.body);
   const createdTransaction = {
     id: nanoid(6),
@@ -26,25 +31,34 @@ transactions.post('/', hasAllRequiredFields, validateDataTypes,(req, res) => {
   transactionsDB.push(createdTransaction);
   res.json(transactionsDB[transactionsDB.length - 1].id);
 });
-transactions.put('/:id', hasAllRequiredFields, validateDataTypes,(req, res) => {
-  const {id} = req.params;
-  const transactionIndex = transactionsDB.findIndex(
-    transaction => transaction.id === id,
-  );
-  if (transactionIndex > -1) {
-    const formattedBody = formatBody(req.body);
-    const updatedTransaction = {
-      id: transactionsDB[transactionIndex].id,
-      created: transactionsDB[transactionIndex].created,
-      updated: dateCreated(),
-      ...formattedBody,
-    };
-    transactionsDB[transactionIndex] = updatedTransaction;
-    res.json({success: 'Transaction updated'});
-  } else {
-    res.status(404).json({error: 'Transaction not found'});
-  }
-});
+transactions.put(
+  '/:id',
+  hasAllRequiredFields,
+  validateDataTypes,
+  (req, res) => {
+    const {id} = req.params;
+    const transactionIndex = transactionsDB.findIndex(
+      transaction => transaction.id === id,
+    );
+    if (transactionIndex > -1) {
+      const formattedBody = formatBody(req.body);
+      const updatedTransaction = {
+        ...transactionsDB[transactionIndex],
+        ...formattedBody,
+        updated: dateCreated(),
+      };
+      const newTransactionsDB = [
+        ...transactionsDB.slice(0, transactionIndex),
+        updatedTransaction,
+        ...transactionsDB.slice(transactionIndex + 1),
+      ];
+      transactionsDB = newTransactionsDB;
+      res.json({success: 'Transaction updated'});
+    } else {
+      res.status(404).json({error: 'Transaction not found'});
+    }
+  },
+);
 transactions.delete('/:id', (req, res) => {
   const {id} = req.params;
   const transactionIndex = transactionsDB.findIndex(
